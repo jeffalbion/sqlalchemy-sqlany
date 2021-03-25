@@ -461,10 +461,9 @@ class SQLAnyDialect(default.DefaultDialect):
     execution_ctx_cls = SQLAnyExecutionContext
 
     def _get_default_schema_name(self, connection):
-        return connection.scalar(
-                     text("SELECT current user",
-                     typemap={'user_name': Unicode})
-             )
+        stmt = text("SELECT current user")
+        stmt.columns(column('user_name', Unicode))
+        return connection.scalar(stmt)
 
     def initialize(self, connection):
         super(SQLAnyDialect, self).initialize(connection)
